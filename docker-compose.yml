@@ -1,0 +1,35 @@
+version: '3.9'
+services:
+  golang:
+    container_name: app-backend
+    build:
+      context: .
+      dockerfile: ./docker/app/Dockerfile
+    volumes:
+       - ./src/:/go/src
+    ports:
+      - 8080:8080
+    tty: true
+    env_file:
+      - ./src/.env
+    environment:
+      POSTGRES_HOST: halalDB
+      POSTGRES_PORT: 5432
+    depends_on:
+      - postgresql
+  postgresql:
+    container_name: halalDB
+    build:
+      context: .
+      dockerfile: ./docker/postgresql/Dockerfile
+    restart: always
+    env_file:
+      - ./src/.env
+    environment:
+      POSTGRES_PORT: 5432
+    ports:
+      - 5432:5432
+    volumes:
+      - ./db/data:/var/lib/postgresql/data
+volumes:
+  db:
