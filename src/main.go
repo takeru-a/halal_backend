@@ -50,6 +50,6 @@ func main(){
 	router.GET("/shops", shopCon.ListShops)
 	router.GET("/shops/:id", shopCon.GetShopByID)
 	router.POST("/shops", shopCon.CreateShop)
-	router.POST("/shops/:id", shopCon.UpdateShop)
+	router.PUT("/shops", shopCon.UpdateShop)
 	router.Run()
 }

@@ -34,6 +34,13 @@ func (usecase *UpdateShopUsecase) Execute(
 		return errors.New("That shop doesn't exist.")
 	}
 	
-	upd := exist.Update(name, introduction, location, level, score )
-	return upd
+	err := exist.Update(name, introduction, location, level, score )
+	if err != nil {
+		return err
+	}
+	err = usecase.shopRepo.Update(ctx, *exist)
+	if err != nill {
+		return err
+	}
+	return nil
 }
