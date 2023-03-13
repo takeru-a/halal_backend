@@ -55,6 +55,8 @@ sqlboiler psql
   - 店の情報を登録
 - /shops/id  GET
   - IDがidの店の情報を取得
+- /shops   PUT
+  - 店の情報を更新
 
 
 
