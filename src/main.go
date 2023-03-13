@@ -37,12 +37,14 @@ func main(){
 	getShopUsecase := usecase.NewGetShopUsecase(shopRepo)
 	listShopUsecase := usecase.NewListShopUsecase(shopRepo)
 	updateShopUsecase := usecase.NewUpdateShopUsecase(shopRepo)
+	deleteShopUsecase := usecase.NewDeleteShopUsecase(shopRepo)
 	
 	shopCon := controllers.NewShopController(
 		*createShopUsecase,
 		*listShopUsecase,
 		*getShopUsecase,
 		*updateShopUsecase,
+		*deleteShopUsecase,
 	)
 	router.GET("/", func(ctx *gin.Context){
 		ctx.JSON(200, gin.H{"msg":"hello!,World!"})
@@ -51,5 +53,6 @@ func main(){
 	router.GET("/shops/:id", shopCon.GetShopByID)
 	router.POST("/shops", shopCon.CreateShop)
 	router.PUT("/shops", shopCon.UpdateShop)
+	router.DELETE("/shops/:id", shopCon.DeleteShop)
 	router.Run()
 }
