@@ -39,7 +39,7 @@ func (usecase *UpdateShopUsecase) Execute(
 		return err
 	}
 	err = usecase.shopRepo.Update(ctx, *exist)
-	if err != nill {
+	if err != nil {
 		return err
 	}
 	return nil
