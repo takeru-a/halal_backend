@@ -12,19 +12,44 @@ type ShopController struct {
 	createShopUsecase usecase.CreateShopUsecase
 	listShopUsecase   usecase.ListShopUsecase
 	getShopUsecase    usecase.GetShopUsecase
-	
+	updateShopUsecase usecase.UpdateShopUsecase
 }
 
 func NewShopController(
 	createShopUsecase usecase.CreateShopUsecase,
 	listShopUsecase   usecase.ListShopUsecase,
 	getShopUsecase    usecase.GetShopUsecase,
+	updateShopUsecase usecase.UpdateShopUsecase,
 ) *ShopController {
 	return &ShopController{
 	createShopUsecase : createShopUsecase,
 	listShopUsecase   : listShopUsecase,
 	getShopUsecase    : getShopUsecase,
+	updateShopUsecase : updateShopUsecase,
 	}
+}
+
+func (con *ShopController) UpdateShop(ctx *gin.Context) {
+	var updShop request.ShopUpdateRequest
+	if err := ctx.BindJSON(&updShop); err != nil {
+		ctx.IndentedJSON(http.StatusInternalServerError, gin.H{"message": "failed bind json"})
+		return
+	}
+	err := con.updateShopUsecase.Execute(
+		ctx,
+		updShop.ID,
+		updShop.Name,
+		updShop.Introduction,
+		updShop.Location,
+		updShop.Level,
+		updShop.Score,
+	)
+	if err != nil {
+		ctx.IndentedJSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+		return
+	}
+
+	ctx.IndentedJSON(http.StatusCreated, "OK")
 }
 
 func (con *ShopController) ListShops(ctx *gin.Context) {

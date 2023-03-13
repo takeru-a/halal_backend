@@ -18,13 +18,30 @@ type ShopRepository interface {
 	FindAll(ctx *gin.Context) (*[]models.Shop, error)
 	FindById(ctx *gin.Context, id string) (*models.Shop, error)
 	// DeleteById(ctx *gin.Context, id string) error
-	// Update(ctx *gin.Context, shop models.Shop) error
+	Update(ctx *gin.Context, shop models.Shop) error
 }
 
 func NewShopRepository(db *sql.DB) ShopRepository {
 	return &ShopSQLRepo{
 		db: db,
 	}
+}
+
+func (repo *ShopSQLRepo) Update(ctx *gin.Context, shop models.Shop) error {
+	updTarget := dbmodels.Shop{
+		ID:	shop.ID,
+		Name:	shop.Name,
+		Introduction:	shop.Introduction,
+		Location:	shop.Location,
+		Level:	shop.Level,
+		Score: shop.Score,
+	}
+
+	_, err := updTarget.Update(ctx, repo.db, boil.Infer())
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (repo *ShopSQLRepo) Save(ctx *gin.Context, shop models.Shop) error {
