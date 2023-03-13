@@ -13,6 +13,7 @@ type ShopController struct {
 	listShopUsecase   usecase.ListShopUsecase
 	getShopUsecase    usecase.GetShopUsecase
 	updateShopUsecase usecase.UpdateShopUsecase
+	deleteShopUsecase usecase.DeleteShopUsecase
 }
 
 func NewShopController(
@@ -20,13 +21,27 @@ func NewShopController(
 	listShopUsecase   usecase.ListShopUsecase,
 	getShopUsecase    usecase.GetShopUsecase,
 	updateShopUsecase usecase.UpdateShopUsecase,
+	deleteShopUsecase usecase.DeleteShopUsecase,
 ) *ShopController {
 	return &ShopController{
 	createShopUsecase : createShopUsecase,
 	listShopUsecase   : listShopUsecase,
 	getShopUsecase    : getShopUsecase,
 	updateShopUsecase : updateShopUsecase,
+	deleteShopUsecase : deleteShopUsecase,
 	}
+}
+
+func (con *ShopController) DeleteShop(ctx *gin.Context) {
+	id := ctx.Param("id")
+	err := con.deleteShopUsecase.Execute(ctx, id)
+
+	if err != nil {
+		ctx.IndentedJSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+		return
+	}
+
+	ctx.IndentedJSON(http.StatusOK, "OK")
 }
 
 func (con *ShopController) UpdateShop(ctx *gin.Context) {

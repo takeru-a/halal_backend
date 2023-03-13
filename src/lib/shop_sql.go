@@ -17,7 +17,7 @@ type ShopRepository interface {
 	Save(ctx *gin.Context, shop models.Shop) error
 	FindAll(ctx *gin.Context) (*[]models.Shop, error)
 	FindById(ctx *gin.Context, id string) (*models.Shop, error)
-	// DeleteById(ctx *gin.Context, id string) error
+	DeleteById(ctx *gin.Context, id string) error
 	Update(ctx *gin.Context, shop models.Shop) error
 }
 
@@ -25,6 +25,21 @@ func NewShopRepository(db *sql.DB) ShopRepository {
 	return &ShopSQLRepo{
 		db: db,
 	}
+}
+
+func (repo *ShopSQLRepo) DeleteById(ctx *gin.Context, id string) error {
+	m, err := dbmodels.FindShop(ctx, repo.db, id)
+	if err == sql.ErrNoRows {
+		return err
+	}
+	if err != nil {
+		return err
+	}
+	_, delErr := m.Delete(ctx, repo.db)
+	if delErr != nil {
+		return err
+	}
+	return nil
 }
 
 func (repo *ShopSQLRepo) Update(ctx *gin.Context, shop models.Shop) error {
